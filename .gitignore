@@ -1,0 +1,23 @@
+# Maven/Java
+target/
+*.class
+*.jar
+*.war
+
+# IDEs
+.idea/
+*.iml
+.vscode/
+*.swp
+.DS_Store
+
+# Environment / Sensitive Configs
+.env
+.env.production
+.env.local
+src/main/resources/application-prod.properties
+src/main/resources/application-local.properties
+
+# Logs
+*.log
+logs/

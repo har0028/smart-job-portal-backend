@@ -1,0 +1,313 @@
+{
+  "info": {
+    "name": "Smart Job Portal API",
+    "description": "Complete API collection for Smart Job Portal with AI Recommendation Engine",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080" },
+    { "key": "adminToken", "value": "" },
+    { "key": "recruiterToken", "value": "" },
+    { "key": "seekerToken", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register Job Seeker",
+          "request": {
+            "method": "POST", "url": "{{baseUrl}}/api/auth/register",
+            "header": [{"key":"Content-Type","value":"application/json"}],
+            "body": {"mode":"raw","raw":"{\n  \"fullName\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"Password@123\",\n  \"role\": \"JOB_SEEKER\"\n}"}
+          }
+        },
+        {
+          "name": "Register Recruiter",
+          "request": {
+            "method": "POST", "url": "{{baseUrl}}/api/auth/register",
+            "header": [{"key":"Content-Type","value":"application/json"}],
+            "body": {"mode":"raw","raw":"{\n  \"fullName\": \"Alice HR\",\n  \"email\": \"alice@company.com\",\n  \"password\": \"Password@123\",\n  \"role\": \"RECRUITER\",\n  \"companyName\": \"TechCorp\",\n  \"companyWebsite\": \"https://techcorp.com\",\n  \"designation\": \"HR Manager\"\n}"}
+          }
+        },
+        {
+          "name": "Login Admin",
+          "event": [{"listen":"test","script":{"exec":["var json = pm.response.json();","pm.collectionVariables.set('adminToken', json.data.accessToken);"]}}],
+          "request": {
+            "method": "POST", "url": "{{baseUrl}}/api/auth/login",
+            "header": [{"key":"Content-Type","value":"application/json"}],
+            "body": {"mode":"raw","raw":"{\n  \"email\": \"admin@smartjobportal.com\",\n  \"password\": \"Admin@123\"\n}"}
+          }
+        },
+        {
+          "name": "Login Recruiter",
+          "event": [{"listen":"test","script":{"exec":["var json = pm.response.json();","pm.collectionVariables.set('recruiterToken', json.data.accessToken);"]}}],
+          "request": {
+            "method": "POST", "url": "{{baseUrl}}/api/auth/login",
+            "header": [{"key":"Content-Type","value":"application/json"}],
+            "body": {"mode":"raw","raw":"{\n  \"email\": \"recruiter1@techcorp.com\",\n  \"password\": \"Password@123\"\n}"}
+          }
+        },
+        {
+          "name": "Login Job Seeker",
+          "event": [{"listen":"test","script":{"exec":["var json = pm.response.json();","pm.collectionVariables.set('seekerToken', json.data.accessToken);"]}}],
+          "request": {
+            "method": "POST", "url": "{{baseUrl}}/api/auth/login",
+            "header": [{"key":"Content-Type","value":"application/json"}],
+            "body": {"mode":"raw","raw":"{\n  \"email\": \"john.doe@gmail.com\",\n  \"password\": \"Password@123\"\n}"}
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Get Dashboard Stats",
+          "request": {
+            "method": "GET", "url": "{{baseUrl}}/api/admin/dashboard",
+            "header": [{"key":"Authorization","value":"Bearer {{adminToken}}"}]
+          }
+        },
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET", "url": "{{baseUrl}}/api/admin/users",
+            "header": [{"key":"Authorization","value":"Bearer {{adminToken}}"}]
+          }
+        },
+        {
+          "name": "Block/Unblock User",
+          "request": {
+            "method": "PATCH", "url": "{{baseUrl}}/api/admin/users/3/block",
+            "header": [{"key":"Authorization","value":"Bearer {{adminToken}}"}]
+          }
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE", "url": "{{baseUrl}}/api/admin/users/5",
+            "header": [{"key":"Authorization","value":"Bearer {{adminToken}}"}]
+          }
+        },
+        {
+          "name": "Get All Recruiters",
+          "request": {
+            "method": "GET", "url": "{{baseUrl}}/api/admin/recruiters",
+            "header": [{"key":"Authorization","value":"Bearer {{adminToken}}"}]
+          }
+        },
+        {
+          "name": "Get All Jobs (Admin)",
+          "request": {
+            "method": "GET", "url": "{{baseUrl}}/api/admin/jobs",
+            "header": [{"key":"Authorization","value":"Bearer {{adminToken}}"}]
+          }
+        },
+        {
+          "name": "Create Skill",
+          "request": {
+            "method": "POST", "url": "{{baseUrl}}/api/skills",
+            "header": [{"key":"Authorization","value":"Bearer {{adminToken}}"},{"key":"Content-Type","value":"application/json"}],
+            "body": {"mode":"raw","raw":"{\n  \"name\": \"kafka\",\n  \"category\": \"Backend\"\n}"}
+          }
+        }
+      ]
+    },
+    {
+      "name": "Recruiter",
+      "item": [
+        {
+          "name": "Get My Jobs",
+          "request": {
+            "method": "GET", "url": "{{baseUrl}}/api/recruiter/jobs",
+            "header": [{"key":"Authorization","value":"Bearer {{recruiterToken}}"}]
+          }
+        },
+        {
+          "name": "Create Job",
+          "request": {
+            "method": "POST", "url": "{{baseUrl}}/api/recruiter/jobs",
+            "header": [{"key":"Authorization","value":"Bearer {{recruiterToken}}"},{"key":"Content-Type","value":"application/json"}],
+            "body": {"mode":"raw","raw":"{\n  \"title\": \"Senior Java Developer\",\n  \"description\": \"Looking for a senior Java dev with Spring Boot experience.\",\n  \"location\": \"Bangalore\",\n  \"jobType\": \"FULL_TIME\",\n  \"salaryRange\": \"15-25 LPA\",\n  \"yearsExperienceRequired\": 3,\n  \"status\": \"ACTIVE\",\n  \"skillIds\": [1, 2, 3, 16],\n  \"optionalSkillIds\": [22, 34]\n}"}
+          }
+        },
+        {
+          "name": "Update Job",
+          "request": {
+            "method": "PUT", "url": "{{baseUrl}}/api/recruiter/jobs/1",
+            "header": [{"key":"Authorization","value":"Bearer {{recruiterToken}}"},{"key":"Content-Type","value":"application/json"}],
+            "body": {"mode":"raw","raw":"{\n  \"title\": \"Senior Java Developer (Updated)\",\n  \"description\": \"Updated description\",\n  \"location\": \"Remote\",\n  \"jobType\": \"REMOTE\",\n  \"salaryRange\": \"20-30 LPA\",\n  \"yearsExperienceRequired\": 4,\n  \"status\": \"ACTIVE\",\n  \"skillIds\": [1, 2, 3, 16, 22]\n}"}
+          }
+        },
+        {
+          "name": "Delete Job",
+          "request": {
+            "method": "DELETE", "url": "{{baseUrl}}/api/recruiter/jobs/1",
+            "header": [{"key":"Authorization","value":"Bearer {{recruiterToken}}"}]
+          }
+        },
+        {
+          "name": "View Applicants for Job",
+          "request": {
+            "method": "GET", "url": "{{baseUrl}}/api/recruiter/jobs/1/applicants",
+            "header": [{"key":"Authorization","value":"Bearer {{recruiterToken}}"}]
+          }
+        },
+        {
+          "name": "Update Application Status",
+          "request": {
+            "method": "PATCH", "url": "{{baseUrl}}/api/recruiter/applications/1/status",
+            "header": [{"key":"Authorization","value":"Bearer {{recruiterToken}}"},{"key":"Content-Type","value":"application/json"}],
+            "body": {"mode":"raw","raw":"{\n  \"status\": \"SHORTLISTED\"\n}"}
+          }
+        }
+      ]
+    },
+    {
+      "name": "Job Seeker",
+      "item": [
+        {
+          "name": "Get My Profile",
+          "request": {
+            "method": "GET", "url": "{{baseUrl}}/api/seeker/profile",
+            "header": [{"key":"Authorization","value":"Bearer {{seekerToken}}"}]
+          }
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PUT", "url": "{{baseUrl}}/api/seeker/profile",
+            "header": [{"key":"Authorization","value":"Bearer {{seekerToken}}"},{"key":"Content-Type","value":"application/json"}],
+            "body": {"mode":"raw","raw":"{\n  \"phone\": \"+91-9876543210\",\n  \"location\": \"Bangalore\",\n  \"bio\": \"Experienced Java developer passionate about backend systems.\",\n  \"yearsExperience\": 4\n}"}
+          }
+        },
+        {
+          "name": "Get My Skills",
+          "request": {
+            "method": "GET", "url": "{{baseUrl}}/api/seeker/skills",
+            "header": [{"key":"Authorization","value":"Bearer {{seekerToken}}"}]
+          }
+        },
+        {
+          "name": "Add Skill",
+          "request": {
+            "method": "POST", "url": "{{baseUrl}}/api/seeker/skills",
+            "header": [{"key":"Authorization","value":"Bearer {{seekerToken}}"},{"key":"Content-Type","value":"application/json"}],
+            "body": {"mode":"raw","raw":"{\n  \"skillId\": 1,\n  \"proficiencyLevel\": 5\n}"}
+          }
+        },
+        {
+          "name": "Remove Skill",
+          "request": {
+            "method": "DELETE", "url": "{{baseUrl}}/api/seeker/skills/1",
+            "header": [{"key":"Authorization","value":"Bearer {{seekerToken}}"}]
+          }
+        },
+        {
+          "name": "Apply for Job",
+          "request": {
+            "method": "POST", "url": "{{baseUrl}}/api/seeker/jobs/1/apply",
+            "header": [{"key":"Authorization","value":"Bearer {{seekerToken}}"},{"key":"Content-Type","value":"application/json"}],
+            "body": {"mode":"raw","raw":"{\n  \"coverLetter\": \"I am very interested in this position and believe my 4 years of Java experience makes me a great fit.\"\n}"}
+          }
+        },
+        {
+          "name": "Get My Applications",
+          "request": {
+            "method": "GET", "url": "{{baseUrl}}/api/seeker/applications",
+            "header": [{"key":"Authorization","value":"Bearer {{seekerToken}}"}]
+          }
+        },
+        {
+          "name": "Withdraw Application",
+          "request": {
+            "method": "DELETE", "url": "{{baseUrl}}/api/seeker/applications/1",
+            "header": [{"key":"Authorization","value":"Bearer {{seekerToken}}"}]
+          }
+        },
+        {
+          "name": "Save a Job",
+          "request": {
+            "method": "POST", "url": "{{baseUrl}}/api/seeker/jobs/2/save",
+            "header": [{"key":"Authorization","value":"Bearer {{seekerToken}}"}]
+          }
+        },
+        {
+          "name": "Get Saved Jobs",
+          "request": {
+            "method": "GET", "url": "{{baseUrl}}/api/seeker/saved-jobs",
+            "header": [{"key":"Authorization","value":"Bearer {{seekerToken}}"}]
+          }
+        },
+        {
+          "name": "Unsave a Job",
+          "request": {
+            "method": "DELETE", "url": "{{baseUrl}}/api/seeker/jobs/2/save",
+            "header": [{"key":"Authorization","value":"Bearer {{seekerToken}}"}]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Jobs (Public)",
+      "item": [
+        {
+          "name": "Search Jobs",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/jobs?keyword=java&location=bangalore&page=0&size=10",
+              "query": [
+                {"key":"keyword","value":"java"},
+                {"key":"location","value":"bangalore"},
+                {"key":"jobType","value":"FULL_TIME"},
+                {"key":"page","value":"0"},
+                {"key":"size","value":"10"},
+                {"key":"sortBy","value":"postedAt"},
+                {"key":"sortDir","value":"desc"}
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Job Detail",
+          "request": {
+            "method": "GET", "url": "{{baseUrl}}/api/jobs/1"
+          }
+        },
+        {
+          "name": "List All Skills",
+          "request": {
+            "method": "GET", "url": "{{baseUrl}}/api/skills"
+          }
+        },
+        {
+          "name": "Search Skills",
+          "request": {
+            "method": "GET", "url": "{{baseUrl}}/api/skills?keyword=java"
+          }
+        }
+      ]
+    },
+    {
+      "name": "AI Recommendations",
+      "item": [
+        {
+          "name": "Get My Recommendations",
+          "request": {
+            "method": "GET", "url": "{{baseUrl}}/api/recommendations",
+            "header": [{"key":"Authorization","value":"Bearer {{seekerToken}}"}]
+          }
+        },
+        {
+          "name": "Get Match Score for Specific Job",
+          "request": {
+            "method": "GET", "url": "{{baseUrl}}/api/recommendations/1/score",
+            "header": [{"key":"Authorization","value":"Bearer {{seekerToken}}"}]
+          }
+        }
+      ]
+    }
+  ]
+}
